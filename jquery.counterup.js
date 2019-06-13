@@ -21,6 +21,10 @@
                 'beginAt': 0,
                 'formatter': false,
                 'context': 'window',
+                'again': false,
+                'ifVisible': true,
+                'easing': false,
+                'booster': 25,
                 callback: function () {
                 }
             }, options),
@@ -31,17 +35,22 @@
             // Store the object
             var $this = $(this),
                 counter = {
+                    num: $(this).data('counterup-num') || $(this).text(),
                     time: $(this).data('counterup-time') || settings.time,
                     delay: $(this).data('counterup-delay') || settings.delay,
                     offset: $(this).data('counterup-offset') || settings.offset,
                     beginAt: $(this).data('counterup-beginat') || settings.beginAt,
+                    again: $(this).data('counterup-again') || settings.again,
+                    ifVisible: $(this).data('counterup-ifvisible') || settings.ifVisible,
+                    easing: $(this).data('counterup-easing') || settings.easing,
+                    booster: $(this).data('counterup-booster') || settings.booster,
                     context: $(this).data('counterup-context') || settings.context
                 };
 
             var counterUpper = function () {
                 var nums = [];
                 var divisions = counter.time / counter.delay;
-                var num = $this.attr('data-num') ? $this.attr('data-num') : $this.text();
+                var num = counter.num;
                 var isComma = /[0-9]+,[0-9]+/.test(num);
                 num = num.replace(/,/g, '');
                 var decimalPlaces = (num.split('.')[1] || []).length;
@@ -91,14 +100,24 @@
                 $this.text(counter.beginAt);
 
                 // Updates the number until we're done
+                var step = 0;
                 var f = function () {
+                    if (counter.easing) {
+                        var delay = $.easing[counter.easing](++step / divisions);
+                        delay = delay * counter.booster + 2;
+                    } else {
+                        var delay = counter.delay;
+                    }
+                    
                     if (!$this.data('counterup-nums')) {
                         settings.callback.call(this);
                         return;
                     }
+                    
                     $this.html($this.data('counterup-nums').shift());
+                    
                     if ($this.data('counterup-nums').length) {
-                        setTimeout($this.data('counterup-func'), counter.delay);
+                        setTimeout($this.data('counterup-func'), delay);
                     } else {
                         $this.data('counterup-nums', null);
                         $this.data('counterup-func', null);
@@ -113,8 +132,15 @@
 
             // Perform counts when the element gets into view
             $this.waypoint(function (direction) {
+                if (counter.ifVisible && !$(this.element).is(":visible")) {
+                    return;
+                }
+                
                 counterUpper();
-                this.destroy(); //-- Waypoint 3.0 version of triggerOnce
+                
+                if (!counter.again) {
+                    this.destroy(); //-- Waypoint 3.0 version of triggerOnce
+                }
             }, {offset: counter.offset + "%", context: counter.context});
         });
 

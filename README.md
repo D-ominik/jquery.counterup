@@ -47,7 +47,7 @@ With default values from plugin instantiation.
 ```
 With values from `data` attribute.
 ```
-<span class="counter" data-counterup-time="1500" data-counterup-delay="30" data-counterup-beginat="100">1,234,567.00</span>
+<span class="counter" data-counterup-time="1500" data-counterup-delay="30" data-counterup-beginat="100" data-counterup-again="1" data-counterup-ifvisible="1" data-counterup-easing="easeInOutSine" data-counterup-booster="25">1,234,567.00</span>
 ```
 
 **jQuery**
@@ -64,6 +64,10 @@ $('.counter').counterUp({
     time: 1000,
     offset: 70,
     beginAt: 100,
+    again: true,
+    ifVisible: true,
+    easing: 'easeInOutSine',
+    booster: 25,
     formatter: function (n) {
       return n.replace(/,/g, '.');
     }
@@ -78,5 +82,15 @@ $('.counter').counterUp({
 at the very moment the element enters the viewport)
 
 `beginAt` - The number from which to count up
+
+`again` - If true: count up every time the element enters the viewport (defaults to false)
+
+`ifVisible` - If true: count up only if element is visible (e.g. not hidden by parents) at the moment it enters
+the viewport. It will count up later when it has become visible AND enters the viewport next time. (defaults to false)
+
+`easing` - Name of an optional easing function, like 'easeInOutSine' (see https://easings.net/). Defaults to false. 
+Note that this will shift the 'time' defined above. You need to include jquery.easing: https://github.com/gdsmith/jquery.easing
+
+`booster` - A multiplier used to fine tune the speed of the easing (defaults to 25)
 
 `formatter` - A callback to format the number with

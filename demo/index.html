@@ -69,6 +69,13 @@
             margin: 0;
         }
 
+        .hidden-number {
+            display: none;
+        }
+        .hidden-number.visible {
+            display: inline-block;
+        }
+
         @media only screen and (max-width: 1024px) {
             span {
                 font-size: 22px;
@@ -102,7 +109,14 @@
         jQuery(document).ready(function ($) {
             $('.counter').counterUp({
                 delay: 10,
-                time: 1000
+                time: 3000,
+                easing: 'easeInOutSine',
+            });
+            
+            $('.show-hidden-number').click(function(e){
+                e.preventDefault();
+                $('.hidden-number').addClass('visible');
+                $(this).remove();
             });
         });
     </script>
@@ -132,7 +146,7 @@
         </span>
     &lt;/body>
 </code>
-<span><span class="counter circle">12345</span></span>
+<span><span class="counter circle">123</span></span>
 <div>
     <span class="counter" style="display: inline-block; width: 32%">52,147</span>
     <span class="counter" style="display: inline-block; width: 32%">1.9583</span>
@@ -151,7 +165,7 @@
 </div>
 <div>
     <span class="counter" style="display: inline-block; width: 32%">0.8412</span>
-    <span class="counter" style="display: inline-block; width: 32%">958393.10</span>
+    <span class="counter" data-counterup-again="true" style="display: inline-block; width: 32%">958393.10</span>
     <span class="counter" style="display: inline-block; width: 32%">5,123,348</span>
 </div>
 <div>
@@ -160,6 +174,12 @@
     <span class="counter" style="display: inline-block; width: 32%">12345</span>
 </div>
 <div>
+    <span>initially hidden: <a href="javascript:;" class="show-hidden-number">Show hidden</a></span>
+    <div class="hidden-number">
+        <span class="counter" style="display: inline-block; width: 32%">9823476</span>
+    </div>
+    
+</div><div>
     <span style="display: inline-block; width: 32%"><span>$</span><span class="counter">43,753</span></span>
     <span class="counter" style="display: inline-block; width: 32%">1,734,195.10</span>
     <span class="counter" style="display: inline-block; width: 32%">849203</span>
@@ -170,6 +190,7 @@
     <span class="counter" style="display: inline-block; width: 32%">5,123,348</span>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.0/jquery.waypoints.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 <script src="../jquery.counterup.js"></script>
 </body>
 </html>
